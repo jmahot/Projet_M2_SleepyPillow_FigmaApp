@@ -10,7 +10,6 @@ import { SleepSession, SleepSettings } from './types/sleep';
 import { sessionsAPI, settingsAPI, advicesAPI, realtimeAPI, checkServerAvailability } from './services/api';
 import { toast } from 'sonner';
 import { Toaster } from './components/ui/sonner';
-import { projectId, publicAnonKey } from '/utils/supabase/info';
 
 type View = 'home' | 'dashboard' | 'history' | 'improvement' | 'settings';
 
@@ -56,7 +55,7 @@ export default function App() {
       } else {
         setSessions(fetchedSessions);
         setUseMockData(false);
-        toast.success('Données chargées depuis Supabase');
+        toast.success('Données chargées depuis l\'API externe');
       }
 
       // Charger les paramètres

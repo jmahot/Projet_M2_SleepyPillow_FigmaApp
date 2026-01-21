@@ -5,10 +5,10 @@ import { Input } from './ui/input';
 import { Switch } from './ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Slider } from './ui/slider';
-import { Settings as SettingsIcon, Moon, Bell, Palette, Wifi, Download, RefreshCw } from 'lucide-react';
+import { Settings as SettingsIcon, Moon, Bell, Palette, Wifi, Download } from 'lucide-react';
 import { SleepSettings } from '../types/sleep';
 import { useState } from 'react';
-import { sessionsAPI, externalAPI } from '../services/api';
+import { sessionsAPI } from '../services/api';
 import { generateMockSessions } from '../data/mockData';
 import { toast } from 'sonner';
 
@@ -20,9 +20,6 @@ interface SettingsProps {
 export function Settings({ settings, onUpdateSettings }: SettingsProps) {
   const [localSettings, setLocalSettings] = useState<SleepSettings>(settings);
   const [isImporting, setIsImporting] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [apiUrl, setApiUrl] = useState('');
-  const [apiKey, setApiKey] = useState('');
 
   const handleSave = () => {
     onUpdateSettings(localSettings);
@@ -63,29 +60,6 @@ export function Settings({ settings, onUpdateSettings }: SettingsProps) {
       toast.error('Erreur lors de l\'importation des données de démonstration');
     } finally {
       setIsImporting(false);
-    }
-  };
-
-  const handleSyncData = async () => {
-    if (!apiUrl) {
-      toast.error('Veuillez entrer l\'URL de l\'API');
-      return;
-    }
-
-    try {
-      setIsSyncing(true);
-      const result = await externalAPI.syncFromExternal(apiUrl, apiKey || undefined);
-      toast.success(result.message);
-      
-      // Recharger la page pour afficher les nouvelles données
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-    } catch (error) {
-      console.error('Error syncing external API:', error);
-      toast.error('Erreur lors de la synchronisation. Assurez-vous que le serveur est actif.');
-    } finally {
-      setIsSyncing(false);
     }
   };
 
@@ -303,94 +277,23 @@ export function Settings({ settings, onUpdateSettings }: SettingsProps) {
         </CardContent>
       </Card>
 
-      {/* Integration API externe */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <RefreshCw className="w-5 h-5" />
-            Intégration API externe
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-gray-600">
-            Synchronisez vos données de sommeil depuis une API externe (Fitbit, Withings, Oura, etc.)
-          </p>
-          
-          <div>
-            <Label htmlFor="apiUrl" className="mb-2 block">
-              URL de l'API
-            </Label>
-            <Input
-              id="apiUrl"
-              type="url"
-              placeholder="https://api.exemple.com/sleep-data"
-              value={apiUrl}
-              onChange={(e) => setApiUrl(e.target.value)}
-            />
-            <p className="text-xs text-gray-600 mt-1">
-              Endpoint de votre API qui retourne les données de sommeil au format JSON
-            </p>
-          </div>
-
-          <div>
-            <Label htmlFor="apiKey" className="mb-2 block">
-              Clé API (optionnelle)
-            </Label>
-            <Input
-              id="apiKey"
-              type="password"
-              placeholder="Votre clé API si nécessaire"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-            />
-            <p className="text-xs text-gray-600 mt-1">
-              Si votre API nécessite une authentification Bearer
-            </p>
-          </div>
-
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-sm text-amber-900 font-semibold mb-2">
-              Format attendu de l'API externe :
-            </p>
-            <pre className="text-xs bg-white p-3 rounded border overflow-x-auto">
-{`{
-  "sleep_records": [
-    {
-      "id": "session-123",
-      "sleep_date": "2026-01-20",
-      "bed_time": "23:30",
-      "wake_time": "07:00",
-      "total_duration_minutes": 450,
-      "sleep_quality_score": 85,
-      "sleep_cycles": 5,
-      "sleep_stages": [
-        {
-          "stage_type": "light",
-          "duration_minutes": 180,
-          "start_time": "23:30"
-        }
-      ],
-      "avg_heart_rate": 65,
-      "avg_respiration_rate": 15
-    }
-  ]
-}`}</pre>
-          </div>
-
-          <Button 
-            onClick={handleSyncData} 
-            disabled={isSyncing || !apiUrl}
-            className="w-full"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-            {isSyncing ? 'Synchronisation en cours...' : 'Synchroniser maintenant'}
-          </Button>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
-              <strong>Note:</strong> Cette fonctionnalité nécessite que le serveur Supabase soit actif.
-              En mode démonstration, utilisez le bouton "Importer des données de démonstration" ci-dessus.
-            </p>
+      {/* Info API */}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <Wifi className="w-5 h-5 text-blue-600 mt-0.5" />
+            <div>
+              <p className="font-semibold text-blue-900 mb-2">Source des données</p>
+              <p className="text-sm text-blue-700">
+                Les données de sommeil sont automatiquement chargées depuis votre API externe :<br />
+                <code className="bg-white px-2 py-1 rounded text-xs mt-1 inline-block">
+                  https://projet-m2-sleepypillow.onrender.com/sessions
+                </code>
+              </p>
+              <p className="text-sm text-blue-700 mt-2">
+                Si l'API est indisponible, l'application bascule automatiquement en mode démonstration.
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -409,27 +312,10 @@ export function Settings({ settings, onUpdateSettings }: SettingsProps) {
           onClick={handleImportMockData}
           disabled={isImporting}
         >
+          <Download className="w-4 h-4 mr-2" />
           {isImporting ? 'Importation...' : 'Importer des données de démonstration'}
         </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={handleSyncData}
-          disabled={isSyncing}
-        >
-          {isSyncing ? 'Synchronisation...' : 'Synchroniser les données'}
-        </Button>
       </div>
-
-      {/* Info */}
-      <Card className="bg-gray-50">
-        <CardContent className="p-4">
-          <p className="text-sm text-gray-600">
-            <strong>Note:</strong> Les données collectées par le capteur sont envoyées via Wi-Fi/Bluetooth 
-            vers le cloud. Aucune donnée n'est stockée localement sur l'appareil.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 }
