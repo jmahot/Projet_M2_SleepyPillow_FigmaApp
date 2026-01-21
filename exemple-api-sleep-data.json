@@ -1,0 +1,242 @@
+{
+  "sleep_records": [
+    {
+      "id": "session-2026-01-20",
+      "sleep_date": "2026-01-20",
+      "bed_time": "23:15",
+      "wake_time": "07:00",
+      "total_duration_minutes": 465,
+      "sleep_quality_score": 88,
+      "sleep_cycles": 5,
+      "sleep_stages": [
+        {
+          "stage_type": "light",
+          "duration_minutes": 45,
+          "start_time": "23:15"
+        },
+        {
+          "stage_type": "deep",
+          "duration_minutes": 60,
+          "start_time": "00:00"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 30,
+          "start_time": "01:00"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 45,
+          "start_time": "01:30"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 40,
+          "start_time": "02:15"
+        },
+        {
+          "stage_type": "deep",
+          "duration_minutes": 55,
+          "start_time": "02:55"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 35,
+          "start_time": "03:50"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 50,
+          "start_time": "04:25"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 40,
+          "start_time": "05:15"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 45,
+          "start_time": "05:55"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 20,
+          "start_time": "06:40"
+        }
+      ],
+      "avg_heart_rate": 62,
+      "avg_respiration_rate": 15,
+      "movement_count": 18,
+      "deep_sleep_minutes": 115,
+      "rem_sleep_minutes": 140,
+      "light_sleep_minutes": 210,
+      "awakening_count": 2,
+      "room_temperature": 19.5,
+      "room_humidity": 45,
+      "noise_level": 28
+    },
+    {
+      "id": "session-2026-01-19",
+      "sleep_date": "2026-01-19",
+      "bed_time": "22:45",
+      "wake_time": "06:30",
+      "total_duration_minutes": 465,
+      "sleep_quality_score": 92,
+      "sleep_cycles": 5,
+      "sleep_stages": [
+        {
+          "stage_type": "light",
+          "duration_minutes": 40,
+          "start_time": "22:45"
+        },
+        {
+          "stage_type": "deep",
+          "duration_minutes": 65,
+          "start_time": "23:25"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 35,
+          "start_time": "00:30"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 50,
+          "start_time": "01:05"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 35,
+          "start_time": "01:55"
+        },
+        {
+          "stage_type": "deep",
+          "duration_minutes": 60,
+          "start_time": "02:30"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 30,
+          "start_time": "03:30"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 55,
+          "start_time": "04:00"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 40,
+          "start_time": "04:55"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 40,
+          "start_time": "05:35"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 15,
+          "start_time": "06:15"
+        }
+      ],
+      "avg_heart_rate": 58,
+      "avg_respiration_rate": 14,
+      "movement_count": 12,
+      "deep_sleep_minutes": 125,
+      "rem_sleep_minutes": 145,
+      "light_sleep_minutes": 195,
+      "awakening_count": 1,
+      "room_temperature": 18.5,
+      "room_humidity": 48,
+      "noise_level": 22
+    },
+    {
+      "id": "session-2026-01-18",
+      "sleep_date": "2026-01-18",
+      "bed_time": "23:30",
+      "wake_time": "07:15",
+      "total_duration_minutes": 465,
+      "sleep_quality_score": 78,
+      "sleep_cycles": 5,
+      "sleep_stages": [
+        {
+          "stage_type": "awake",
+          "duration_minutes": 15,
+          "start_time": "23:30"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 50,
+          "start_time": "23:45"
+        },
+        {
+          "stage_type": "deep",
+          "duration_minutes": 50,
+          "start_time": "00:35"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 40,
+          "start_time": "01:25"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 40,
+          "start_time": "02:05"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 45,
+          "start_time": "02:45"
+        },
+        {
+          "stage_type": "deep",
+          "duration_minutes": 45,
+          "start_time": "03:30"
+        },
+        {
+          "stage_type": "awake",
+          "duration_minutes": 10,
+          "start_time": "04:15"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 35,
+          "start_time": "04:25"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 50,
+          "start_time": "05:00"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 45,
+          "start_time": "05:50"
+        },
+        {
+          "stage_type": "rem",
+          "duration_minutes": 30,
+          "start_time": "06:35"
+        },
+        {
+          "stage_type": "light",
+          "duration_minutes": 10,
+          "start_time": "07:05"
+        }
+      ],
+      "avg_heart_rate": 68,
+      "avg_respiration_rate": 16,
+      "movement_count": 28,
+      "deep_sleep_minutes": 95,
+      "rem_sleep_minutes": 120,
+      "light_sleep_minutes": 225,
+      "awakening_count": 3,
+      "room_temperature": 21.0,
+      "room_humidity": 42,
+      "noise_level": 35
+    }
+  ]
+}
