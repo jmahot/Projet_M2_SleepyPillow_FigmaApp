@@ -293,7 +293,6 @@ Si ces endpoints n'existent pas, l'application fonctionnera quand même avec uni
 ## ✅ Résumé
 
 - ✅ **API configurée** : `https://projet-m2-sleepypillow.onrender.com/sessions`
-- ✅ **Pas de Supabase** : Tout fonctionne directement avec votre API
 - ✅ **Transformation automatique** : Support de plusieurs formats JSON
 - ✅ **Mapping flexible** : Les noms de champs sont convertis automatiquement
 - ✅ **Mode démo intégré** : Fallback automatique si API indisponible
