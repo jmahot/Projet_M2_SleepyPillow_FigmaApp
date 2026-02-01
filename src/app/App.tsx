@@ -30,10 +30,8 @@ export default function App() {
     if (useMockData) return; 
 
     try {
-      // On précise à TypeScript que data contient un tableau de sessions
       const data = await sessionsAPI.getAll() as any; 
       
-      // Correction de la ligne rouge avec une vérification de sécurité
       const freshSessions: SleepSession[] = Array.isArray(data) 
         ? data 
         : (data && (data as any).sessions ? (data as any).sessions : []);
@@ -47,12 +45,15 @@ export default function App() {
           setTimeout(() => setIsSyncing(false), 2000);
           
           toast.success(`${newUniqueSessions.length} nouvelle nuit synchronisée !`);
-          return [...newUniqueSessions, ...prevSessions];
+          
+          // --- FUSION ET SAUVEGARDE ---
+          const updatedSessions = [...newUniqueSessions, ...prevSessions];
+          localStorage.setItem('sleepy_sessions', JSON.stringify(updatedSessions));
+          return updatedSessions;
         }
         return prevSessions;
       });
 
-      // Update du temps réel (coeur, respiration)
       const freshRealtime = await realtimeAPI.get();
       if (freshRealtime) setRealtimeData(freshRealtime);
 
@@ -74,56 +75,92 @@ export default function App() {
 
   const loadData = async (forceMode?: 'api' | 'mock') => {
     setIsLoading(true);
-    // On utilise le mode forcé, sinon on regarde l'état dataSource
     const mode = forceMode || dataSource;
 
     try {
-      if (mode === 'mock') {
-        throw new Error('Forced Mock Mode');
+      // -- ÉTAPE 0 : VIDE CACHE
+      if (forceMode === 'api') {
+        localStorage.removeItem('sleepy_sessions'); // On vide le stockage local
+        setSessions([]); // On vide l'affichage pour repartir à zéro
       }
 
-      // 1. Charger les sessions depuis /all
-      const fetchedSessions = await sessionsAPI.getAll();
+      // -- ÉTAPE : 1 : DATA DEMO
+      if (mode === 'mock') {
+        localStorage.removeItem('sleepy_sessions');
+        setSessions(generateMockSessions());
+        setSettings(mockSettings);
+        setAdvices(mockAdvices);
+        setRealtimeData(mockRealtimeData);
+        setUseMockData(true);
+        toast.info('Mode Démonstration activé');
+        setIsLoading(false);
+        return;
+      }
+
+      // --- ÉTAPE 2 : RÉCUPÉRER LE STOCKAGE LOCAL (PERSISTANCE) ---
+      const savedSessions = localStorage.getItem('sleepy_sessions');
+      if (savedSessions && forceMode !== 'api') {
+        setSessions(JSON.parse(savedSessions));
+      }
+
+      // --- ÉTAPE 3 : APPEL API ---
+      const data = await sessionsAPI.getAll() as any;
+      const fetchedSessions: SleepSession[] = Array.isArray(data) 
+        ? data 
+        : (data && data.sessions ? data.sessions : []);
 
       if (fetchedSessions && fetchedSessions.length > 0) {
-        setSessions(fetchedSessions);
+        setSessions(prevSessions => {
+          const existingIds = new Set(prevSessions.map(s => s.id));
+          const newUnique = fetchedSessions.filter(s => !existingIds.has(s.id));
+          
+          // Si on force l'API, prevSessions est vide [], donc on ne prend que l'API
+          const finalSessions = [...newUnique, ...prevSessions];
+          
+          localStorage.setItem('sleepy_sessions', JSON.stringify(finalSessions));
+          return finalSessions;
+        });
+        
         setUseMockData(false);
-        toast.success('Données chargées depuis l\'API Render');
-      } else {
-        throw new Error('API connectée mais aucune session trouvée');
+        toast.success('Données synchronisées avec l\'API');
+      } else if (!savedSessions) {
+        // Si l'API est vide ET qu'on n'a rien en local
+        throw new Error('Aucune donnée nulle part');
       }
 
-      // 2. Charger les autres données (Settings, Advices, Realtime)
-      // On utilise .catch() pour chaque appel pour ne pas tout bloquer si une route manque
+      // 4. Charger les autres données (Settings, Advices, Realtime)
       try {
         const fetchedSettings = await settingsAPI.get();
         setSettings(fetchedSettings);
-      } catch (e) { console.log("Settings non trouvés sur l'API"); }
+      } catch (e) { console.log("Settings non trouvés"); }
 
       try {
         const fetchedAdvices = await advicesAPI.getAll();
         if (fetchedAdvices.length > 0) setAdvices(fetchedAdvices);
-      } catch (e) { console.log("Advices non trouvés sur l'API"); }
+      } catch (e) { console.log("Advices non trouvés"); }
 
       try {
         const fetchedRealtime = await realtimeAPI.get();
         if (fetchedRealtime) setRealtimeData(fetchedRealtime);
-      } catch (e) { console.log("Realtime non trouvé sur l'API"); }
+      } catch (e) { console.log("Realtime non trouvé"); }
 
     } catch (error) {
-      console.error('Erreur lors du chargement API:', error);
+      console.error('Erreur chargement:', error);
       
-      // Fallback : Mode démo
-      setSessions(generateMockSessions());
-      setSettings(mockSettings);
-      setAdvices(mockAdvices);
-      setRealtimeData(mockRealtimeData);
-      setUseMockData(true);
-      
-      if (mode === 'api') {
-        toast.error('Échec connexion API', {
-          description: 'Vérifiez votre connexion ou l\'URL Render.'
-        });
+      // Si l'API échoue mais qu'on a déjà des données en local, on ne repasse PAS en mode démo
+      const savedSessions = localStorage.getItem('sleepy_sessions');
+      if (!savedSessions) {
+        setSessions(generateMockSessions());
+        setSettings(mockSettings);
+        setAdvices(mockAdvices);
+        setRealtimeData(mockRealtimeData);
+        setUseMockData(true);
+        
+        if (mode === 'api') {
+          toast.error('Échec connexion API', { description: 'Mode démo activé.' });
+        }
+      } else {
+        toast.info('Mode hors-ligne : Données locales chargées');
       }
     } finally {
       setIsLoading(false);
@@ -300,6 +337,14 @@ export default function App() {
     }
   };
 
+  const clearHistory = () => {
+    if (window.confirm("Voulez-vous vraiment supprimer tout l'historique stocké localement ?")) {
+      localStorage.removeItem('sleepy_sessions');
+      setSessions([]);
+      toast.error("Historique supprimé");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -429,24 +474,39 @@ export default function App() {
       {/* Toaster */}
       <Toaster />
 
-      {/* Panel de Debug - ICI */}
+      {/* Panel de Debug Mis à jour */}
       <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex flex-col gap-3 border border-slate-700 sm:scale-100 scale-90">
-        <div className="flex items-center gap-2 border-b border-slate-700 pb-2">
-          <div className={`w-2 h-2 rounded-full ${useMockData ? 'bg-orange-500' : 'bg-green-500'}`}></div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Data Control</span>
+        <div className="flex items-center justify-between border-b border-slate-700 pb-2">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${useMockData ? 'bg-orange-500' : 'bg-green-500'}`}></div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Data Control</span>
+          </div>
+          {/* Petit compteur pour voir la fusion en direct */}
+          <span className="text-[10px] font-mono text-blue-400">{sessions.length} nuits</span>
         </div>
-        <div className="flex gap-2">
+        
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <button 
+              onClick={() => { setDataSource('api'); loadData('api'); }}
+              className={`flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${!useMockData && dataSource === 'api' ? 'bg-blue-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
+            >
+              FORCE API
+            </button>
+            <button 
+              onClick={() => { setDataSource('mock'); loadData('mock'); }}
+              className={`flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${useMockData ? 'bg-orange-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
+            >
+              DATA DÉMO
+            </button>
+          </div>
+          
+          {/* Nouveau bouton de suppression */}
           <button 
-            onClick={() => { setDataSource('api'); loadData('api'); }}
-            className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${!useMockData && dataSource === 'api' ? 'bg-blue-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
+            onClick={clearHistory}
+            className="w-full px-3 py-2 text-xs font-semibold rounded-lg bg-red-950/40 border border-red-500/30 text-red-400 hover:bg-red-900/40 transition-all uppercase tracking-tighter"
           >
-            FORCE API
-          </button>
-          <button 
-            onClick={() => { setDataSource('mock'); loadData('mock'); }}
-            className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${useMockData ? 'bg-orange-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
-          >
-            FORCE MOCK
+            Effacer l'historique local
           </button>
         </div>
       </div>
