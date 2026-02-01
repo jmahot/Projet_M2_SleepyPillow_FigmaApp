@@ -38,17 +38,30 @@ export default function App() {
 
       setSessions(prevSessions => {
         const existingIds = new Set(prevSessions.map(s => s.id));
-        const newUniqueSessions = freshSessions.filter(s => !existingIds.has(s.id));
+        const newUniqueSessions = freshSessions.filter(s => s && s.id && !existingIds.has(s.id));
 
         if (newUniqueSessions.length > 0) {
+          // 1. On prépare la nouvelle liste
+          const updatedSessions = [...newUniqueSessions, ...prevSessions];
+          
+          // 2. Sauvegarde physique
+          localStorage.setItem('sleepy_sessions', JSON.stringify(updatedSessions));
+
+          // 3. MISE À JOUR VISUELLE IMMÉDIATE
+          // On prend la toute dernière session reçue
+          const latest = newUniqueSessions[0];
+          
+          // Si l'utilisateur regarde la vue "Détail", on met à jour les infos en direct
+          setSelectedSession(current => {
+            if (current && current.id === latest.id) return latest;
+            return current;
+          });
+
+          // 4. Déclenchement de l'animation et du toast
           setIsSyncing(true);
           setTimeout(() => setIsSyncing(false), 2000);
-          
-          toast.success(`${newUniqueSessions.length} nouvelle nuit synchronisée !`);
-          
-          // --- FUSION ET SAUVEGARDE ---
-          const updatedSessions = [...newUniqueSessions, ...prevSessions];
-          localStorage.setItem('sleepy_sessions', JSON.stringify(updatedSessions));
+          toast.success(`Donnée synchronisée : ${latest.date}`);
+
           return updatedSessions;
         }
         return prevSessions;
@@ -491,13 +504,13 @@ export default function App() {
               onClick={() => { setDataSource('api'); loadData('api'); }}
               className={`flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${!useMockData && dataSource === 'api' ? 'bg-blue-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
             >
-              FORCE API
+              SOURCE API
             </button>
             <button 
               onClick={() => { setDataSource('mock'); loadData('mock'); }}
               className={`flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${useMockData ? 'bg-orange-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
             >
-              DATA DÉMO
+              SOURCE LOCALE
             </button>
           </div>
           
