@@ -287,7 +287,7 @@ export function Settings({ settings, onUpdateSettings }: SettingsProps) {
               <p className="text-sm text-blue-700">
                 Les données de sommeil sont automatiquement chargées depuis votre API externe :<br />
                 <code className="bg-white px-2 py-1 rounded text-xs mt-1 inline-block">
-                  https://projet-m2-sleepypillow.onrender.com/sessions
+                  https://projet-m2-sleepypillow.onrender.com/all
                 </code>
               </p>
               <p className="text-sm text-blue-700 mt-2">

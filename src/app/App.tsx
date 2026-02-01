@@ -81,7 +81,7 @@ export default function App() {
 
     const interval = setInterval(() => {
       syncNewData();
-    }, 10000); // Toutes les 10 secondes
+    }, 1000); // Toutes les 1 seconde
 
     return () => clearInterval(interval);
   }, [dataSource]); // Se relance si on change de source
