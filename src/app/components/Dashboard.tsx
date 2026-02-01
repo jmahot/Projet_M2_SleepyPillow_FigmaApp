@@ -64,7 +64,7 @@ export function Dashboard({ realtimeData, recentSessions }: DashboardProps) {
         <Card className="border-blue-500 border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-blue-500 animate-pulse" />
+              <Activity className={`w-6 h-6 ${realtimeData.heartRate > 0 ? 'animate-heartbeat' : 'text-gray-400'}`} />
               Sommeil en cours
             </CardTitle>
           </CardHeader>

@@ -23,11 +23,54 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [useMockData, setUseMockData] = useState(false);
   const [dataSource, setDataSource] = useState<'api' | 'mock'>('api');
+  const [isSyncing, setIsSyncing] = useState(false); // Pour l'animation
 
-  // Charger les données au démarrage
+  // Fonction pour synchroniser les nouvelles données sans écraser les anciennes
+  const syncNewData = async () => {
+    if (useMockData) return; 
+
+    try {
+      // On précise à TypeScript que data contient un tableau de sessions
+      const data = await sessionsAPI.getAll() as any; 
+      
+      // Correction de la ligne rouge avec une vérification de sécurité
+      const freshSessions: SleepSession[] = Array.isArray(data) 
+        ? data 
+        : (data && (data as any).sessions ? (data as any).sessions : []);
+
+      setSessions(prevSessions => {
+        const existingIds = new Set(prevSessions.map(s => s.id));
+        const newUniqueSessions = freshSessions.filter(s => !existingIds.has(s.id));
+
+        if (newUniqueSessions.length > 0) {
+          setIsSyncing(true);
+          setTimeout(() => setIsSyncing(false), 2000);
+          
+          toast.success(`${newUniqueSessions.length} nouvelle nuit synchronisée !`);
+          return [...newUniqueSessions, ...prevSessions];
+        }
+        return prevSessions;
+      });
+
+      // Update du temps réel (coeur, respiration)
+      const freshRealtime = await realtimeAPI.get();
+      if (freshRealtime) setRealtimeData(freshRealtime);
+
+    } catch (error) {
+      console.error("Synchro auto échouée:", error);
+    }
+  };
+
+  // L'intervalle qui tourne en tâche de fond
   useEffect(() => {
-    loadData();
-  }, []);
+    loadData(); // Premier chargement au démarrage
+
+    const interval = setInterval(() => {
+      syncNewData();
+    }, 10000); // Toutes les 10 secondes
+
+    return () => clearInterval(interval);
+  }, [dataSource]); // Se relance si on change de source
 
   const loadData = async (forceMode?: 'api' | 'mock') => {
     setIsLoading(true);
