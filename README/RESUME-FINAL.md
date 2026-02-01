@@ -2,7 +2,7 @@
 
 ## 🎉 Configuration terminée !
 
-Votre application SleepyPillow est maintenant **100% configurée** pour charger les données depuis votre API externe.
+L'Application SleepyPillow est maintenant **100% configurée** pour charger les données depuis l'API externe.
 
 ---
 
@@ -17,7 +17,7 @@ Votre application SleepyPillow est maintenant **100% configurée** pour charger 
 
 ### ✅ Supabase complètement retiré
 - Aucune référence à Supabase dans le code
-- Appels directs à votre API
+- Appels directs à l'API
 - Architecture simplifiée
 
 ### ✅ Interface utilisateur
@@ -38,7 +38,7 @@ Votre application SleepyPillow est maintenant **100% configurée** pour charger 
 ```
 
 ### Format supporté
-Votre API peut retourner :
+L'API peut retourner :
 - `[{session1}, {session2}]` ✅
 - `{sessions: [{...}]}` ✅
 - `{sleep_records: [{...}]}` ✅
@@ -56,7 +56,7 @@ npm run dev
 Regardez si les données se chargent.
 
 ### Option 2 : Test rapide de l'API
-Ouvrez `test-api.html` dans votre navigateur.
+Ouvrez `test-api.html` dans le navigateur.
 
 ### Option 3 : cURL
 ```bash
@@ -81,7 +81,7 @@ curl https://projet-m2-sleepypillow.onrender.com/sessions
 ## ⚠️ Important à savoir
 
 ### API Render.com en veille
-Si votre API Render est en mode gratuit, elle se met en veille après inactivité.
+Si l'API Render est en mode gratuit, elle se met en veille après inactivité.
 
 **Symptôme** : Badge "Mode Démo" au démarrage  
 **Solution** :
@@ -125,7 +125,7 @@ Si l'API met plus de temps → Mode démo activé automatiquement.
 
 ## ✨ C'est prêt !
 
-Votre application SleepyPillow est **opérationnelle** et connectée à votre API ! 🚀
+L'Application SleepyPillow est **opérationnelle** et connectée à l'API ! 🚀
 
 **Pour lancer :**
 ```bash
@@ -134,7 +134,7 @@ npm run dev
 
 **Pour tester l'API :**
 ```bash
-Ouvrez test-api.html dans votre navigateur
+Ouvrez test-api.html dans le navigateur
 ```
 
 ---

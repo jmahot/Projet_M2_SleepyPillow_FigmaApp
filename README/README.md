@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-L'application se lance et charge automatiquement les données depuis votre API.
+L'application se lance et charge automatiquement les données depuis l'API.
 
 ---
 
@@ -107,7 +107,7 @@ Le service API transforme automatiquement ces formats.
 ## 🧪 Tester l'API
 
 ### Outil de test interactif
-Ouvrez `test-api.html` dans votre navigateur pour :
+Ouvrez `test-api.html` dans le navigateur pour :
 - Tester la connexion
 - Voir le temps de réponse
 - Prévisualiser les données

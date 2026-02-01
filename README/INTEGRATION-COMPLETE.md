@@ -2,7 +2,7 @@
 
 ## 🎉 Configuration Complète !
 
-Votre application SleepyPillow est maintenant **100% connectée à votre API externe**, sans Supabase.
+L' application SleepyPillow est maintenant **100% connectée à l' API externe**, sans Supabase.
 
 ---
 
@@ -48,7 +48,7 @@ https://projet-m2-sleepypillow.onrender.com/sessions
 ## 🧪 Tester l'intégration
 
 ### Option 1 : Interface de test
-Ouvrez le fichier `/test-api.html` dans votre navigateur pour :
+Ouvrez le fichier `/test-api.html` dans le navigateur pour :
 - Tester la connexion à l'API
 - Voir le temps de réponse
 - Prévisualiser les données retournées
@@ -100,7 +100,7 @@ curl https://projet-m2-sleepypillow.onrender.com/sessions
 
 ### Mapping des champs
 
-| Votre API | SleepyPillow | Alternatives supportées |
+| L' API | SleepyPillow | Alternatives supportées |
 |-----------|--------------|------------------------|
 | `id` ou `_id` | `id` | - |
 | `date` ou `sleep_date` | `date` | - |
@@ -120,7 +120,7 @@ curl https://projet-m2-sleepypillow.onrender.com/sessions
 ## 🚀 Utilisation
 
 ### Démarrage normal
-1. Lancez votre application SleepyPillow
+1. Lancez l'application SleepyPillow
 2. L'app appelle automatiquement `https://projet-m2-sleepypillow.onrender.com/sessions`
 3. Les données s'affichent instantanément
 
@@ -149,7 +149,7 @@ Si l'API est indisponible :
 - **Rapide** : Pas de serveur intermédiaire
 
 ### ⚠️ Points d'attention
-- **CORS** : Votre API doit autoriser les requêtes depuis n'importe quelle origine
+- **CORS** : L' API doit autoriser les requêtes depuis n'importe quelle origine
 - **Timeout** : Si l'API met plus de 10s, mode démo activé
 - **Render veille** : Le premier appel peut échouer, réessayez après 1 minute
 
@@ -218,13 +218,13 @@ useEffect(() => {
 
 ## 🎉 C'est tout !
 
-Votre application est **prête à fonctionner** !
+L' application est **prête à fonctionner** !
 
 **Prochaines étapes :**
 1. ✅ Testez avec [test-api.html](./test-api.html)
 2. ✅ Lancez l'application SleepyPillow
 3. ✅ Vérifiez que les données s'affichent
-4. ✅ Profitez de votre app de suivi de sommeil !
+4. ✅ Profitez de l'app de suivi de sommeil !
 
 ---
 
@@ -232,4 +232,4 @@ Votre application est **prête à fonctionner** !
 Consultez la console du navigateur (F12) pour les logs détaillés.
 
 **Tout fonctionne ?**  
-Bravo ! Votre app SleepyPillow est opérationnelle ! 🚀😴🌙
+Bravo ! L' app SleepyPillow est opérationnelle ! 🚀😴🌙

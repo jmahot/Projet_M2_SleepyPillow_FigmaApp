@@ -82,7 +82,7 @@ realtime:{userId} -> RealtimeData
 
 ### Connexion de l'oreiller
 1. Allez dans Paramètres
-2. Sélectionnez votre modèle de capteur
+2. Sélectionnez le modèle de capteur
 3. Les données seront collectées via Wi-Fi/Bluetooth et envoyées à l'API REST
 
 ### Ajouter un feedback

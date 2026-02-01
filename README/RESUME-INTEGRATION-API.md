@@ -10,7 +10,7 @@
 ```
 POST /make-server-c3b54980/sync-external-api
 ```
-- Récupère des données depuis votre API
+- Récupère des données depuis L'API
 - Transforme automatiquement au format SleepyPillow
 - Sauvegarde dans Supabase
 - Retourne le nombre de sessions importées
@@ -27,7 +27,7 @@ POST /make-server-c3b54980/webhook/realtime
 ```typescript
 transformExternalDataToSessions(externalData: any)
 ```
-- Convertit le format de votre API vers SleepyPillow
+- Convertit le format de L'API vers SleepyPillow
 - Facilement personnalisable selon votre source de données
 - Gère les champs manquants avec des valeurs par défaut
 
@@ -54,8 +54,8 @@ externalAPI.syncFromExternal(apiUrl, apiKey?)
 ### Méthode 1 : Interface utilisateur (Simple)
 
 1. **Allez dans Paramètres** → Descendez jusqu'à "Intégration API externe"
-2. **Entrez l'URL de votre API** (ex: `https://api.mon-capteur.com/sleep-data`)
-3. **Entrez la clé API** (si votre API nécessite une authentification)
+2. **Entrez l'URL de L'API** (ex: `https://api.mon-capteur.com/sleep-data`)
+3. **Entrez la clé API** (si L'API nécessite une authentification)
 4. **Cliquez sur "Synchroniser maintenant"**
 5. **Attendez** la confirmation
 6. **Les données apparaissent** automatiquement dans l'app
@@ -97,7 +97,7 @@ Avec le payload :
 
 ## 📝 Format de données attendu
 
-Votre API doit retourner :
+L'API doit retourner :
 
 ```json
 {
@@ -130,9 +130,9 @@ Votre API doit retourner :
 
 ## 🔧 Personnalisation
 
-### Adapter à votre format d'API
+### Adapter au format d'API
 
-Si votre API a un format différent, modifiez la fonction dans `/supabase/functions/server/index.tsx` :
+Si L'API a un format différent, modifiez la fonction dans `/supabase/functions/server/index.tsx` :
 
 ```typescript
 function transformExternalDataToSessions(externalData: any) {
@@ -212,7 +212,7 @@ curl -X POST https://{projectId}.supabase.co/functions/v1/make-server-c3b54980/w
 | "Server offline" | Le serveur Supabase n'est pas actif → Utilisez le mode démo |
 | "API key required" | Ajoutez votre clé API dans le formulaire |
 | "Failed to fetch" | Vérifiez l'URL et que l'API est accessible |
-| "No sleep_records found" | Vérifiez le format JSON retourné par votre API |
+| "No sleep_records found" | Vérifiez le format JSON retourné par L'API |
 | Données non affichées | Rechargez la page ou consultez les logs serveur |
 
 ---
@@ -248,7 +248,7 @@ curl -X POST https://{projectId}.supabase.co/functions/v1/make-server-c3b54980/w
 
 ## 🎉 Prêt à utiliser !
 
-Votre application SleepyPillow peut maintenant :
+L'Application SleepyPillow peut maintenant :
 1. ✅ Se connecter à n'importe quelle API REST
 2. ✅ Recevoir des données en temps réel par webhook
 3. ✅ Transformer automatiquement les données

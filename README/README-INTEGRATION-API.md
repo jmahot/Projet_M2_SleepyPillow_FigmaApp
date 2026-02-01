@@ -17,10 +17,10 @@ SleepyPillow peut maintenant se connecter à des API externes pour importer des 
 2. Allez dans **Paramètres** (icône d'engrenage)
 3. Descendez jusqu'à la section **"Intégration API externe"**
 
-### Étape 2 : Configurer votre API
+### Étape 2 : Configurer l'API
 ```
 URL de l'API : https://api.mon-capteur.com/sleep-data
-Clé API (optionnelle) : votre-cle-si-necessaire
+Clé API (optionnelle) : le-cle-si-necessaire
 ```
 
 ### Étape 3 : Synchroniser
@@ -53,7 +53,7 @@ Cliquez sur **"Synchroniser maintenant"** et c'est fait ! ✅
 Vous appelez l'API externe pour récupérer les données
 
 ```
-Votre App → Serveur SleepyPillow → API Externe → Supabase
+L'App → Serveur SleepyPillow → API Externe → Supabase
 ```
 
 **Usage :**
@@ -65,7 +65,7 @@ Votre App → Serveur SleepyPillow → API Externe → Supabase
 L'appareil envoie les données automatiquement
 
 ```
-Capteur IoT → Serveur SleepyPillow → Supabase → Votre App
+Capteur IoT → Serveur SleepyPillow → Supabase → l'App
 ```
 
 **Usage :**
@@ -77,7 +77,7 @@ Capteur IoT → Serveur SleepyPillow → Supabase → Votre App
 
 ## 📋 Format de données
 
-### Ce que votre API doit retourner
+### Ce que l'API doit retourner
 
 ```json
 {
@@ -161,7 +161,7 @@ X-User-Id: default-user
 
 ## 💻 Utilisation programmatique
 
-### Depuis votre code TypeScript
+### Depuis le code TypeScript
 
 ```typescript
 import { externalAPI } from '@/app/services/api';
@@ -203,9 +203,9 @@ Voir **[exemple-capteur-iot.py](./exemple-capteur-iot.py)** pour un exemple comp
 
 ## 🎨 Personnalisation
 
-### Adapter à votre format d'API
+### Adapter à le format d'API
 
-Si votre API a un format différent, modifiez la fonction de transformation dans :  
+Si l'API a un format différent, modifiez la fonction de transformation dans :  
 `/supabase/functions/server/index.tsx`
 
 ```typescript
@@ -232,16 +232,16 @@ function transformExternalDataToSessions(externalData: any) {
 
 ### Clés API
 - ✅ Stockez les clés sensibles dans les variables d'environnement Supabase
-- ✅ Utilisez `SLEEP_SENSOR_API_KEY` pour la clé de votre API
+- ✅ Utilisez `SLEEP_SENSOR_API_KEY` pour la clé de l'API
 - ✅ Les clés ne sont jamais exposées au frontend
 
 ### Webhook signature (optionnelle)
 ```typescript
 // Variables d'environnement Supabase
-WEBHOOK_SECRET=votre-secret-partage
+WEBHOOK_SECRET=le-secret-partage
 
 // Header requis dans les webhooks
-X-Webhook-Signature: votre-secret-partage
+X-Webhook-Signature: le-secret-partage
 ```
 
 ---
@@ -269,8 +269,8 @@ Pour tester :
 **Solution :** Utilisez le mode démo en attendant
 
 ### "API key is required"
-➡️ Votre API nécessite une authentification  
-**Solution :** Ajoutez votre clé dans le champ "Clé API"
+➡️ l'API nécessite une authentification  
+**Solution :** Ajoutez le clé dans le champ "Clé API"
 
 ### "Failed to fetch"
 ➡️ L'URL n'est pas accessible  

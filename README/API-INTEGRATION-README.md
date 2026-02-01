@@ -2,7 +2,7 @@
 
 ## ✅ Configuration terminée !
 
-Votre application SleepyPillow est maintenant configurée pour récupérer les données directement depuis votre API externe **sans utiliser Supabase**.
+Votre application SleepyPillow est maintenant configurée pour récupérer les données directement depuis l'API externe **sans utiliser Supabase**.
 
 ---
 
@@ -20,7 +20,7 @@ L'application appelle automatiquement cette URL au démarrage pour charger toute
 
 ### 1. **Au démarrage de l'application**
 
-L'app fait un appel GET à votre API :
+L'app fait un appel GET à l'API :
 ```javascript
 GET https://projet-m2-sleepypillow.onrender.com/sessions
 ```
@@ -64,7 +64,7 @@ Le service API transforme automatiquement les données reçues vers le format at
 
 Le service API mappe automatiquement différents noms de champs :
 
-| Champ de votre API | Champ SleepyPillow |
+| Champ de l'API | Champ SleepyPillow |
 |-------------------|-------------------|
 | `id` ou `_id` | `id` |
 | `sleep_date` ou `date` | `date` |
@@ -221,7 +221,7 @@ Pour toutes les fonctionnalités :
 
 ## 🚀 Tester l'intégration
 
-### 1. Vérifier que votre API est accessible
+### 1. Vérifier que l'API est accessible
 
 ```bash
 curl https://projet-m2-sleepypillow.onrender.com/sessions
@@ -231,7 +231,7 @@ Vous devriez recevoir un JSON avec vos sessions.
 
 ### 2. Lancer l'application
 
-L'application se connectera automatiquement à votre API au démarrage.
+L'application se connectera automatiquement à l'API au démarrage.
 
 ### 3. Vérifier les données
 
@@ -256,7 +256,7 @@ console.log('API externe non disponible, utilisation du mode démo')
 
 ### Timeout de l'API
 
-Si votre API Render.com est en veille, le premier appel peut prendre 30-60 secondes.  
+Si l'API Render.com est en veille, le premier appel peut prendre 30-60 secondes.  
 L'application a un timeout de **10 secondes**, donc elle basculera en mode démo pendant ce temps.
 
 **Solution :** Faites un premier appel manuel pour réveiller l'API :
@@ -269,7 +269,7 @@ Puis rafraîchissez l'application.
 
 ## 🎯 Endpoints supplémentaires (optionnels)
 
-Si votre API supporte ces endpoints, ils seront utilisés automatiquement :
+Si l'API supporte ces endpoints, ils seront utilisés automatiquement :
 
 ```
 GET  /sessions          → Récupérer toutes les sessions
@@ -302,4 +302,4 @@ Si ces endpoints n'existent pas, l'application fonctionnera quand même avec uni
 
 **Votre application est prête à utiliser ! 🎉**
 
-Si votre API retourne des données au format JSON avec au moins `id`, `date`, `bedTime`, `wakeTime`, l'application les affichera automatiquement.
+Si l'API retourne des données au format JSON avec au moins `id`, `date`, `bedTime`, `wakeTime`, l'application les affichera automatiquement.

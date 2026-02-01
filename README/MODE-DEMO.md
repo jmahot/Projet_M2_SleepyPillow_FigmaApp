@@ -102,7 +102,7 @@ Pour activer la persistance dans le cloud :
 3. Le badge "Mode Démo" disparaîtra
 4. Les données seront automatiquement sauvegardées
 
-**Aucune action requise de votre part** - tout est déjà configuré ! 🎉
+**Aucune action requise** - tout est déjà configuré ! 🎉
 
 ## 💡 Utilisation recommandée
 

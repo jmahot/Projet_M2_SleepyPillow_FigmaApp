@@ -1,6 +1,6 @@
 # 📡 Guide d'intégration API pour SleepyPillow
 
-Ce guide explique comment intégrer des données depuis une API externe (capteur de sommeil, Fitbit, Withings, Oura, etc.) dans votre application SleepyPillow.
+Ce guide explique comment intégrer des données depuis une API externe (capteur de sommeil, Fitbit, Withings, Oura, etc.) dans la application SleepyPillow.
 
 ---
 
@@ -23,7 +23,7 @@ POST https://{projectId}.supabase.co/functions/v1/make-server-c3b54980/sync-exte
 
 ## 📝 Étapes d'intégration
 
-### 1. Préparer votre API externe
+### 1. Préparer l'API externe
 
 Votre API doit retourner un JSON au format suivant :
 
@@ -73,8 +73,8 @@ Votre API doit retourner un JSON au format suivant :
 ### 2. Utiliser l'interface utilisateur
 
 1. Allez dans **Paramètres** → Section **Intégration API externe**
-2. Entrez l'URL de votre API
-3. Entrez votre clé API (optionnelle si votre API est publique)
+2. Entrez l'URL de l'API
+3. Entrez la clé API (optionnelle si l'API est publique)
 4. Cliquez sur **Synchroniser maintenant**
 
 ### 3. Utiliser l'API programmatiquement
@@ -86,7 +86,7 @@ import { externalAPI } from '@/app/services/api';
 try {
   const result = await externalAPI.syncFromExternal(
     'https://api.exemple.com/sleep-data',
-    'votre-cle-api-optionnelle'
+    'la-cle-api-optionnelle'
   );
   
   console.log(result.message); // "Successfully synced X sessions"
@@ -103,7 +103,7 @@ try {
 ### Modifier la fonction de transformation
 
 Le serveur transforme automatiquement vos données au format SleepyPillow. 
-Si votre API a un format différent, modifiez la fonction `transformExternalDataToSessions` dans `/supabase/functions/server/index.tsx` :
+Si l'API a un format différent, modifiez la fonction `transformExternalDataToSessions` dans `/supabase/functions/server/index.tsx` :
 
 ```typescript
 function transformExternalDataToSessions(externalData: any) {
@@ -127,11 +127,11 @@ function transformExternalDataToSessions(externalData: any) {
 
 ### Sécuriser avec une clé API
 
-Pour plus de sécurité, stockez votre clé API dans les variables d'environnement Supabase :
+Pour plus de sécurité, stockez la clé API dans les variables d'environnement Supabase :
 
 1. Ajoutez la variable d'environnement dans Supabase :
    ```
-   SLEEP_SENSOR_API_KEY=votre-cle-secrete
+   SLEEP_SENSOR_API_KEY=la-cle-secrete
    ```
 
 2. Le serveur utilisera automatiquement cette clé en priorité
@@ -167,7 +167,7 @@ X-Webhook-Signature: {signature-optionnelle}
 }
 ```
 
-### Configurer votre appareil IoT :
+### Configurer la appareil IoT :
 
 1. Configurez l'appareil pour envoyer des POST HTTP vers l'endpoint webhook
 2. Incluez les headers requis
@@ -179,10 +179,10 @@ X-Webhook-Signature: {signature-optionnelle}
 
 ### Authentification Bearer
 
-Si votre API nécessite une authentification, le serveur enverra automatiquement :
+Si l'API nécessite une authentification, le serveur enverra automatiquement :
 
 ```
-Authorization: Bearer {votre-cle-api}
+Authorization: Bearer {la-cle-api}
 ```
 
 ### Signature de webhook (optionnelle)
@@ -191,10 +191,10 @@ Pour valider les webhooks, ajoutez un secret :
 
 ```typescript
 // Dans Supabase, ajoutez la variable d'environnement :
-WEBHOOK_SECRET=votre-secret-partage
+WEBHOOK_SECRET=la-secret-partage
 
 // L'appareil IoT doit envoyer :
-X-Webhook-Signature: votre-secret-partage
+X-Webhook-Signature: la-secret-partage
 ```
 
 ---
@@ -279,16 +279,16 @@ while True:
 - En mode démo, utilisez "Importer des données de démonstration"
 
 ### Erreur : "API key is required"
-- Ajoutez votre clé API dans le formulaire
+- Ajoutez la clé API dans le formulaire
 - Ou configurez `SLEEP_SENSOR_API_KEY` dans les variables d'environnement
 
 ### Erreur : "Failed to fetch"
 - Vérifiez que l'URL de l'API est correcte
 - Assurez-vous que l'API est accessible publiquement
-- Vérifiez les permissions CORS de votre API
+- Vérifiez les permissions CORS de l'API
 
 ### Données non affichées
-- Vérifiez le format JSON retourné par votre API
+- Vérifiez le format JSON retourné par l'API
 - Consultez les logs du serveur dans Supabase
 - Vérifiez la fonction de transformation `transformExternalDataToSessions`
 
