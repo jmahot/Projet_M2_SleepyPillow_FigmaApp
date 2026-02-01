@@ -105,7 +105,7 @@ export default function App() {
         setAdvices(mockAdvices);
         setRealtimeData(mockRealtimeData);
         setUseMockData(true);
-        toast.info('Mode Démonstration activé');
+        toast.info('Source Locale activée');
         setIsLoading(false);
         return;
       }
@@ -160,7 +160,7 @@ export default function App() {
     } catch (error) {
       console.error('Erreur chargement:', error);
       
-      // Si l'API échoue mais qu'on a déjà des données en local, on ne repasse PAS en mode démo
+      // Si l'API échoue mais qu'on a déjà des données en local, on ne repasse PAS en mode données locales
       const savedSessions = localStorage.getItem('sleepy_sessions');
       if (!savedSessions) {
         setSessions(generateMockSessions());
@@ -170,7 +170,7 @@ export default function App() {
         setUseMockData(true);
         
         if (mode === 'api') {
-          toast.error('Échec connexion API', { description: 'Mode démo activé.' });
+          toast.error('Échec connexion API', { description: 'Bascule automatique sur la source locale' });
         }
       } else {
         toast.info('Mode hors-ligne : Données locales chargées');
@@ -191,9 +191,9 @@ export default function App() {
   const handleUpdateSettings = async (newSettings: SleepSettings) => {
     try {
       if (useMockData) {
-        // Mode démo - sauvegarde locale uniquement
+        // Mode données locales - sauvegarde locale uniquement
         setSettings(newSettings);
-        toast.success('Paramètres enregistrés (mode démo)');
+        toast.success('Paramètres enregistrés (données locales)');
         return;
       }
       
@@ -203,7 +203,7 @@ export default function App() {
     } catch (error) {
       // Fallback en local sans afficher d'erreur
       setSettings(newSettings);
-      toast.success('Paramètres enregistrés (mode démo)');
+      toast.success('Paramètres enregistrés (données locales)');
     }
   };
 
@@ -375,7 +375,7 @@ export default function App() {
               <span className="text-xl font-semibold">SleepyPillow</span>
               {useMockData && (
                 <span className="ml-2 text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">
-                  Mode Démo
+                  Source Locale
                 </span>
               )}
             </div>
