@@ -1,27 +1,20 @@
 import { SleepSession, SleepSettings, SleepAdvice, RealtimeData } from '../types/sleep';
 
 // URL de votre API externe
-const EXTERNAL_API_URL = 'https://projet-m2-sleepypillow.onrender.com';
+const EXTERNAL_API_URL = '/api-render';
 
 // Variable pour tracker si le serveur est disponible
 let serverAvailable: boolean | null = null;
 
 // Test de disponibilité du serveur
 export const checkServerAvailability = async (): Promise<boolean> => {
-  if (serverAvailable !== null) {
-    return serverAvailable;
-  }
-
   try {
-    const response = await fetch(`${EXTERNAL_API_URL}/sessions`, {
+    const response = await fetch(`${EXTERNAL_API_URL}/all`, { // <-- Vérifie /all
       method: 'GET',
-      signal: AbortSignal.timeout(5000), // Timeout de 5 secondes
+      signal: AbortSignal.timeout(5000),
     });
-    serverAvailable = response.ok;
-    return serverAvailable;
+    return response.ok;
   } catch (error) {
-    console.log('API externe non disponible, utilisation du mode démo');
-    serverAvailable = false;
     return false;
   }
 };
@@ -95,23 +88,18 @@ const mapPhaseType = (type: string): 'awake' | 'light' | 'deep' | 'rem' => {
 // Sessions API
 export const sessionsAPI = {
   getAll: async (): Promise<SleepSession[]> => {
-    const data = await fetchAPI('/sessions');
+    const data = await fetchAPI('/all');
     
-    // Si la réponse est directement un tableau
-    if (Array.isArray(data)) {
-      return data.map(transformExternalSession);
-    }
-    
-    // Si la réponse est un objet avec une propriété sessions ou sleep_records
-    if (data.sessions) {
+    // Ton JSON a une structure { "sessions": [...] }
+    if (data && data.sessions && Array.isArray(data.sessions)) {
       return data.sessions.map(transformExternalSession);
     }
     
-    if (data.sleep_records) {
-      return data.sleep_records.map(transformExternalSession);
+    // Au cas où l'API renvoie directement le tableau (sécurité)
+    if (Array.isArray(data)) {
+      return data.map(transformExternalSession);
     }
-    
-    // Sinon retourner un tableau vide
+
     return [];
   },
 
@@ -211,8 +199,8 @@ export const feedbackAPI = {
 export const realtimeAPI = {
   get: async (): Promise<RealtimeData | null> => {
     try {
-      const data = await fetchAPI('/realtime');
-      return data.realtimeData || data;
+      const data = await fetchAPI('/all'); // On utilise /all car tout est dedans
+      return data.realtime || null;
     } catch (error) {
       return null;
     }

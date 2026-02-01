@@ -22,65 +22,66 @@ export default function App() {
   const [realtimeData, setRealtimeData] = useState(mockRealtimeData);
   const [isLoading, setIsLoading] = useState(true);
   const [useMockData, setUseMockData] = useState(false);
+  const [dataSource, setDataSource] = useState<'api' | 'mock'>('api');
 
   // Charger les données au démarrage
   useEffect(() => {
     loadData();
   }, []);
 
-  const loadData = async () => {
+  const loadData = async (forceMode?: 'api' | 'mock') => {
     setIsLoading(true);
-    
+    // On utilise le mode forcé, sinon on regarde l'état dataSource
+    const mode = forceMode || dataSource;
+
     try {
-      // Tester la connexion au serveur silencieusement
-      const isServerAvailable = await checkServerAvailability();
-      
-      if (!isServerAvailable) {
-        // Mode démo - pas de message d'erreur
-        throw new Error('Server offline - using demo mode');
+      if (mode === 'mock') {
+        throw new Error('Forced Mock Mode');
       }
 
-      // Charger les sessions
+      // 1. Charger les sessions depuis /all
       const fetchedSessions = await sessionsAPI.getAll();
-      
-      // Si aucune session n'existe, initialiser avec des données mockées
-      if (fetchedSessions.length === 0) {
-        setUseMockData(true);
-        const mockSessions = generateMockSessions();
-        setSessions(mockSessions);
-        
-        toast.info('Aucune donnée trouvée', {
-          description: 'Utilisation de données de démonstration. Allez dans Paramètres pour importer des données.'
-        });
-      } else {
+
+      if (fetchedSessions && fetchedSessions.length > 0) {
         setSessions(fetchedSessions);
         setUseMockData(false);
-        toast.success('Données chargées depuis l\'API externe');
+        toast.success('Données chargées depuis l\'API Render');
+      } else {
+        throw new Error('API connectée mais aucune session trouvée');
       }
 
-      // Charger les paramètres
-      const fetchedSettings = await settingsAPI.get();
-      setSettings(fetchedSettings);
+      // 2. Charger les autres données (Settings, Advices, Realtime)
+      // On utilise .catch() pour chaque appel pour ne pas tout bloquer si une route manque
+      try {
+        const fetchedSettings = await settingsAPI.get();
+        setSettings(fetchedSettings);
+      } catch (e) { console.log("Settings non trouvés sur l'API"); }
 
-      // Charger les conseils
-      const fetchedAdvices = await advicesAPI.getAll();
-      if (fetchedAdvices.length > 0) {
-        setAdvices(fetchedAdvices);
-      }
+      try {
+        const fetchedAdvices = await advicesAPI.getAll();
+        if (fetchedAdvices.length > 0) setAdvices(fetchedAdvices);
+      } catch (e) { console.log("Advices non trouvés sur l'API"); }
 
-      // Charger les données en temps réel
-      const fetchedRealtime = await realtimeAPI.get();
-      if (fetchedRealtime) {
-        setRealtimeData(fetchedRealtime);
-      }
+      try {
+        const fetchedRealtime = await realtimeAPI.get();
+        if (fetchedRealtime) setRealtimeData(fetchedRealtime);
+      } catch (e) { console.log("Realtime non trouvé sur l'API"); }
 
     } catch (error) {
-      // Mode démo silencieux - pas de logs d'erreur ni de notifications
+      console.error('Erreur lors du chargement API:', error);
+      
+      // Fallback : Mode démo
       setSessions(generateMockSessions());
       setSettings(mockSettings);
       setAdvices(mockAdvices);
       setRealtimeData(mockRealtimeData);
       setUseMockData(true);
+      
+      if (mode === 'api') {
+        toast.error('Échec connexion API', {
+          description: 'Vérifiez votre connexion ou l\'URL Render.'
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -384,6 +385,28 @@ export default function App() {
 
       {/* Toaster */}
       <Toaster />
+
+      {/* Panel de Debug - ICI */}
+      <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex flex-col gap-3 border border-slate-700 sm:scale-100 scale-90">
+        <div className="flex items-center gap-2 border-b border-slate-700 pb-2">
+          <div className={`w-2 h-2 rounded-full ${useMockData ? 'bg-orange-500' : 'bg-green-500'}`}></div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Data Control</span>
+        </div>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => { setDataSource('api'); loadData('api'); }}
+            className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${!useMockData && dataSource === 'api' ? 'bg-blue-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
+          >
+            FORCE API
+          </button>
+          <button 
+            onClick={() => { setDataSource('mock'); loadData('mock'); }}
+            className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${useMockData ? 'bg-orange-600 shadow-inner' : 'bg-slate-800 hover:bg-slate-700'}`}
+          >
+            FORCE MOCK
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
