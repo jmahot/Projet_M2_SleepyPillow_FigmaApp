@@ -21,7 +21,6 @@ L'écosystème SleepyPillow repose sur une architecture **API-First** robuste, c
 ### 📡 Flux de Données
 * **Source API (Render) :** Synchronisation haute fréquence via une API dédiée pour un suivi précis.
 * **Architecture Hybride :** Gestion intelligente de la disponibilité. Si l'API rencontre un timeout ou une indisponibilité, le système bascule automatiquement sur une **Source Locale** (données de démonstration réalistes) pour garantir une expérience continue.
-* **Transformation de données :** Un service de mapping dynamique permet d'unifier des formats variés (Fitbit, Withings, ou capteurs IoT personnalisés) vers le schéma de données SleepyPillow.
 
 ### 💻 Stack Logicielle
 * **Frontend :** React 18, TypeScript, Tailwind CSS v4.

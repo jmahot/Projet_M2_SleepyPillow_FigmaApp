@@ -203,7 +203,7 @@
             <div class="test-section">
                 <h2>🔗 URL de l'API</h2>
                 <div class="info-box">
-                    <strong>https://projet-m2-sleepypillow.onrender.com/sessions</strong>
+                    <strong>https://projet-m2-sleepypillow.onrender.com/all</strong>
                     <p>Cette URL sera appelée automatiquement au démarrage de l'application.</p>
                 </div>
             </div>
@@ -265,7 +265,8 @@
     </div>
     
     <script>
-        const API_URL = 'https://projet-m2-sleepypillow.onrender.com/sessions';
+        // Utilisation de l'endpoint /all qui est plus standard pour ton projet
+        const API_URL = 'https://projet-m2-sleepypillow.onrender.com/all';
         
         async function testAPI() {
             const button = document.getElementById('testButton');
@@ -273,10 +274,15 @@
             const resultDiv = document.getElementById('connectionResult');
             const statsSection = document.getElementById('statsSection');
             const previewSection = document.getElementById('previewSection');
-            
+            const express = require('express');
+            const cors = require('cors'); // 1. Importer cors
+            const app = express();
+
+            app.use(cors());
+                        
             // Reset UI
             button.disabled = true;
-            button.innerHTML = '<span class="loading"></span>Test en cours...';
+            button.innerHTML = '<span class="loading"></span>Réveil de l\'API en cours...';
             statusBadge.textContent = 'En cours...';
             statusBadge.className = 'status-badge status-pending';
             resultDiv.innerHTML = '';
@@ -285,71 +291,71 @@
             
             const startTime = performance.now();
             
+            // Création d'un timeout de 60 secondes spécifiquement pour Render
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
             try {
                 const response = await fetch(API_URL, {
                     method: 'GET',
+                    mode: 'cors', // Ajout indispensable pour les appels hors-domaine
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
+                    signal: controller.signal
                 });
                 
+                clearTimeout(timeoutId);
                 const endTime = performance.now();
                 const responseTime = Math.round(endTime - startTime);
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`Erreur serveur : ${response.status} (Vérifiez les CORS sur votre API)`);
                 }
                 
                 const data = await response.json();
                 const dataString = JSON.stringify(data, null, 2);
                 const dataSize = (new Blob([dataString]).size / 1024).toFixed(2);
                 
-                // Déterminer le format des données
+                // Extraction des sessions selon les 3 formats que tu as géré
                 let sessions = [];
-                if (Array.isArray(data)) {
-                    sessions = data;
-                } else if (data.sessions) {
-                    sessions = data.sessions;
-                } else if (data.sleep_records) {
-                    sessions = data.sleep_records;
-                }
+                if (Array.isArray(data)) sessions = data;
+                else if (data.sessions) sessions = data.sessions;
+                else if (data.sleep_records) sessions = data.sleep_records;
                 
-                // Success
+                // Mise à jour UI Succès
                 statusBadge.textContent = 'Connecté ✓';
                 statusBadge.className = 'status-badge status-success';
                 
-                // Stats
                 document.getElementById('sessionCount').textContent = sessions.length;
                 document.getElementById('responseTime').textContent = responseTime + 'ms';
                 document.getElementById('dataSize').textContent = dataSize + ' KB';
                 statsSection.style.display = 'block';
                 
-                // Preview
                 document.getElementById('dataPreview').textContent = dataString;
                 previewSection.style.display = 'block';
                 
                 resultDiv.innerHTML = `
                     <div class="info-box" style="background: #d1fae5; border-color: #6ee7b7; color: #065f46;">
-                        <strong>✅ Connexion réussie !</strong>
-                        <p>L'API a retourné ${sessions.length} session(s) en ${responseTime}ms.</p>
-                        <p style="margin-top: 8px;">L'application SleepyPillow chargera automatiquement ces données au démarrage.</p>
+                        <strong>✅ API Opérationnelle !</strong>
+                        <p>Le serveur a répondu positivement. Les données sont prêtes à être injectées dans l'application.</p>
                     </div>
                 `;
                 
             } catch (error) {
-                // Error
                 statusBadge.textContent = 'Erreur ✗';
                 statusBadge.className = 'status-badge status-error';
                 
+                let message = error.name === 'AbortError' 
+                    ? "Le serveur est trop long à répondre (toujours en veille sur Render)." 
+                    : error.message;
+
                 resultDiv.innerHTML = `
                     <div class="info-box" style="background: #fee2e2; border-color: #fca5a5; color: #991b1b;">
-                        <strong>❌ Erreur de connexion</strong>
-                        <p>${error.message}</p>
-                        <p style="margin-top: 8px;">
-                            <strong>Solutions possibles :</strong><br>
-                            • Si l'API Render.com est en veille, attendez 30-60 secondes et réessayez<br>
-                            • Vérifiez que l'URL est correcte<br>
-                            • L'application basculera automatiquement en mode démo
+                        <strong>❌ Échec du test</strong>
+                        <p>${message}</p>
+                        <p style="margin-top: 8px; font-size: 12px;">
+                            <em>Note : Si c'est l'erreur "Failed to fetch", assurez-vous que votre backend Node.js possède le middleware <code>cors()</code>.</em>
                         </p>
                     </div>
                 `;
@@ -359,9 +365,9 @@
             }
         }
         
-        // Auto-test au chargement
+        // Test auto au chargement
         window.addEventListener('load', () => {
-            setTimeout(testAPI, 500);
+            setTimeout(testAPI, 1000);
         });
     </script>
 </body>
