@@ -202,7 +202,6 @@ export function Settings({ settings, onUpdateSettings }: SettingsProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="light">Clair</SelectItem>
-                <SelectItem value="dark">Sombre</SelectItem>
                 <SelectItem value="auto">Automatique</SelectItem>
               </SelectContent>
             </Select>
@@ -231,10 +230,7 @@ export function Settings({ settings, onUpdateSettings }: SettingsProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Smart Pillow v2">Smart Pillow v2</SelectItem>
-                <SelectItem value="Smart Pillow Pro">Smart Pillow Pro</SelectItem>
-                <SelectItem value="Sleep Band">Sleep Band</SelectItem>
-                <SelectItem value="Sleep Tracker Mat">Sleep Tracker Mat</SelectItem>
+                <SelectItem value="Sleepy Pillow v1">Sleepy Pillow v1</SelectItem>
               </SelectContent>
             </Select>
           </div>
