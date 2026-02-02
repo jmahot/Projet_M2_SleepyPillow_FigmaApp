@@ -1,7 +1,7 @@
 # 🌙 SleepyPillow - Sommeil Augmenté
 
 > **Projet Transverse M2 Efrei 2026**
-> Une station de monitoring biométrique invisible qui traduit vos nuits en données exploitables pour optimiser votre récupération.
+> L'oreiller connecté
 
 ---
 
